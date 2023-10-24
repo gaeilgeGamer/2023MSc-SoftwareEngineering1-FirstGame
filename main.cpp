@@ -36,7 +36,7 @@ int main()
     Rectangle obRec; 
     obRec.width = obstacle.width;
     obRec.height = obstacle.height; 
-    obRec.x = 0;
+    obRec.x = 300;
     obRec.y = 0;
     Vector2 obPos;
     obPos.x = screenWidth - obRec.width; 
@@ -75,15 +75,77 @@ int main()
         collision = true; 
     }
 
-    
+    if(IsKeyDown(KEY_D) && !jumped){
+        scarfyAnim.pos.x += speed* deltaTime;
+        scarfyAnim.rec.width = scarfy.width/6;
 
+        scarfyAnim.runningTime += deltaTime; 
+        if(scarfyAnim.runningTime>= scarfyAnim.updateTime){
+            scarfyAnim.runningTime = 0.0;
+            scarfyAnim.rec.x = scarfyAnim.frame * scarfyAnim.rec.width;
+            scarfyAnim.frame ++;
+            if(scarfyAnim.frame>5){
+                scarfyAnim.frame = 0;
+            }
+        }
+    }
+
+    if(IsKeyReleased(KEY_D) && !jumped){
+        scarfyAnim.frame = 0; 
+        scarfyAnim.rec.x = scarfyAnim.frame * scarfyAnim.rec.width; 
+    }
+
+       if(IsKeyDown(KEY_A) && !jumped){
+        scarfyAnim.pos.x -= speed* deltaTime;
+        scarfyAnim.rec.width = -scarfy.width/6;
+
+        scarfyAnim.runningTime += deltaTime; 
+        if(scarfyAnim.runningTime>= scarfyAnim.updateTime){
+            scarfyAnim.runningTime = 0.0;
+            scarfyAnim.rec.x = scarfyAnim.frame * scarfyAnim.rec.width;
+            scarfyAnim.frame ++;
+            if(scarfyAnim.frame>5){
+                scarfyAnim.frame = 0;
+            }
+        }
+    }
+
+    if(IsKeyReleased(KEY_A) && !jumped){
+        scarfyAnim.frame = 0; 
+        scarfyAnim.rec.x = scarfyAnim.frame * scarfyAnim.rec.width; 
+    }
+
+    if(scarfyAnim.pos.y >= screenHeight - scarfy.height){
+        velocity = 0;
+        jumped = false; 
+    }
+    else {
+        velocity += gravity * deltaTime; 
+        jumped = true;
+    }
+
+    if(IsKeyPressed(KEY_SPACE)&& !jumped){
+        velocity -= jumpHeight;
+    }
+
+    scarfyAnim.pos.y += velocity * deltaTime;
+
+    obPos.x += obVel * deltaTime;
 
             BeginDrawing();
             ClearBackground(RAYWHITE);
+
+            if(!collision){
+                DrawTextureRec(scarfy, scarfyAnim.rec, scarfyAnim.pos, WHITE);
+                DrawTextureRec(obstacle,obRec, obPos, WHITE);
+            }
+
             EndDrawing();        
                 
     }
 
+    UnloadTexture(scarfy);
+    UnloadTexture(obstacle);
     CloseWindow();       
     return 0;       
             
