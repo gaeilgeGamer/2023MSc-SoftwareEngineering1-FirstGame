@@ -11,10 +11,10 @@ struct Anim
 
 int main()
 {
-    const int screenWidth = 700;
-    const int screenHeight = 450;
+    const int windowWidth{700};
+    const int windowHeight{450};
     
-    InitWindow(screenWidth, screenHeight, "First Game");
+    InitWindow(windowWidth, windowHeight, "First Game");
 
     const int gravity{1000};
     const int scarfyPadding{50};
@@ -28,7 +28,7 @@ int main()
     scarfyAnim.rec.x = 0;
     scarfyAnim.rec.y = 0;
     scarfyAnim.pos.x = scarfyPadding; 
-    scarfyAnim.pos.y = screenHeight - scarfyAnim.rec.height;
+    scarfyAnim.pos.y = windowHeight - scarfyAnim.rec.height;
     scarfyAnim.frame = 0;
     scarfyAnim.updateTime = 1.0/12.0;
     scarfyAnim.runningTime = 0.0;
@@ -36,11 +36,11 @@ int main()
     Rectangle obRec; 
     obRec.width = obstacle.width;
     obRec.height = obstacle.height; 
-    obRec.x = 300;
+    obRec.x = 0;
     obRec.y = 0;
     Vector2 obPos;
-    obPos.x = screenWidth - obRec.width; 
-    obPos.y = screenHeight - obRec.height; 
+    obPos.x = windowWidth - obRec.width; 
+    obPos.y = windowHeight - obRec.height; 
 
     int obVel{-100};
 
@@ -57,17 +57,17 @@ int main()
     { const float deltaTime{GetFrameTime()};
 
     Rectangle obstacleRec{
-        obRec.x,
+        obPos.x,
         obPos.y,
-        obRec.height,
-        obRec.width
+        obRec.width,
+        obRec.height
     };
 
     Rectangle scarfyRec{
         scarfyAnim.pos.x,
         scarfyAnim.pos.y,
-        scarfyAnim.rec.height,
-        scarfyAnim.rec.width
+        scarfyAnim.rec.width,
+        scarfyAnim.rec.height
     };
 
     if(CheckCollisionRecs(scarfyRec,obstacleRec))
@@ -83,7 +83,7 @@ int main()
         if(scarfyAnim.runningTime>= scarfyAnim.updateTime){
             scarfyAnim.runningTime = 0.0;
             scarfyAnim.rec.x = scarfyAnim.frame * scarfyAnim.rec.width;
-            scarfyAnim.frame ++;
+            scarfyAnim.frame++;
             if(scarfyAnim.frame>5){
                 scarfyAnim.frame = 0;
             }
@@ -103,7 +103,7 @@ int main()
         if(scarfyAnim.runningTime>= scarfyAnim.updateTime){
             scarfyAnim.runningTime = 0.0;
             scarfyAnim.rec.x = scarfyAnim.frame * scarfyAnim.rec.width;
-            scarfyAnim.frame ++;
+            scarfyAnim.frame++;
             if(scarfyAnim.frame>5){
                 scarfyAnim.frame = 0;
             }
@@ -115,7 +115,7 @@ int main()
         scarfyAnim.rec.x = scarfyAnim.frame * scarfyAnim.rec.width; 
     }
 
-    if(scarfyAnim.pos.y >= screenHeight - scarfy.height){
+    if(scarfyAnim.pos.y >= windowHeight - scarfy.height){
         velocity = 0;
         jumped = false; 
     }
@@ -133,7 +133,7 @@ int main()
     obPos.x += obVel * deltaTime;
 
             BeginDrawing();
-            ClearBackground(RAYWHITE);
+            ClearBackground(WHITE);
 
             if(!collision){
                 DrawTextureRec(scarfy, scarfyAnim.rec, scarfyAnim.pos, WHITE);
